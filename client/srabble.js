@@ -53,7 +53,8 @@ var ALPHABET_ARRAY = [
 ];
 
 
-// style one HASH
+// style one HASH << first iteration
+
 // style two preprocess a tree. 
 
 var ScrabbleGame = function(){
@@ -82,8 +83,9 @@ ScrabbleGame.prototype.generateBag = function(bagSize){
   for (var i = 0; i < bagSize; i++) {
     letterBag.push(this.getNextLetter())
   };
-
+  return letterBag;
 };
+
 ScrabbleGame.prototype.getNextLetter = function(){
   var randIndex = Math.ceil(Math.random()*this.letterbox.length);
   return this.letterbox.splice(randIndex,1);
@@ -133,16 +135,19 @@ $.ajax({
 // -----------------
 
 $('document').ready(function(){
-  $('#inputBox').on('keyup',function(){
-
-    var inputKeys = $('#inputBox').val();
-    var valList = window.trie.getPossibleWords(inputKeys);
-
-    $('#list').html('');//clear list
-
-    for (var i = 0; i < valList.length; i++) {
-      $('#list').append('<li>' + valList[i]+ '</li>');
-    };
-
+  $('#genLetters').on('click',function(){
+    $('#inputBox').val(scrabble.generateBag().join(''));
   });
+
+  $('#findWords').on('click',function(){
+    var chars = $('#inputBox').val();
+    var charArray = chars.split('');
+    var validWords = scrabble.getPossibleWords(charArray);
+    $('#list').html('');
+    for (var i = 0; i < validWords.length; i++) {
+      $('#list').append('<li>' + validWords[i] + '</li>');
+    };
+  });
+
+
 });
