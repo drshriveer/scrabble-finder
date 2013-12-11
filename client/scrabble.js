@@ -68,7 +68,7 @@ var ScrabbleGame = function(){
 ScrabbleGame.prototype.loadDictionary = function(dict){
   if(!Array.isArray(dict)){ throw "not a proper dictionary"; }
   for (var i = 0; i < dict.length; i++) {
-    this._dictionary[dict[i]] = 0;
+    this._dictionary[dict[i].toLowerCase()] = true;
   };
 };
 
@@ -92,17 +92,16 @@ ScrabbleGame.prototype.getNextLetter = function(){
 };
 
 ScrabbleGame.prototype.getPossibleWords = function(charArray){
-  var validWords = [];
-
-  var seeker = function(currentWord, leftovers){
-    if(_dictionary[currentWord]){ validWords.push(currentWord) }
+  var validWords = {};
+  var seeker = function(currentWord, leftovers, dict){
+    if(dict[currentWord]){ validWords[currentWord] = true; }
     for (var i = 0; i < leftovers.length; i++) {
-      seeker(currentWord+leftovers[i],leftovers.slice(0,i).concat(leftovers.slice(i+1,leftovers.length)));
+      seeker(currentWord+leftovers[i],leftovers.slice(0,i).concat(leftovers.slice(i+1,leftovers.length)),dict);
     };
   }
-  
-  seeker("", charArray);
-  return validWords;
+
+  seeker("", charArray,this._dictionary);
+  return Object.keys(validWords);
 };
 
 
@@ -119,7 +118,7 @@ $.ajax({
   url: "./dict",
   dataType: "text",
   success: function(data){
-    var dictArray = data.split("\n");
+    dictArray = data.split("\n");
     console.log(dictArray);
     scrabble.loadDictionary(dictArray);    
   },
@@ -151,3 +150,5 @@ $('document').ready(function(){
 
 
 });
+
+
