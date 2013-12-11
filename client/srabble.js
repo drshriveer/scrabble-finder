@@ -100,7 +100,7 @@ ScrabbleGame.prototype.getPossibleWords = function(charArray){
       seeker(currentWord+leftovers[i],leftovers.slice(0,i).concat(leftovers.slice(i+1,leftovers.length)));
     };
   }
-
+  
   seeker("", charArray);
   return validWords;
 };
